@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Transform objTransform;
+    public Animator animator; /*code for animation*/
+    public SpriteRenderer sprite; /*code for animation*/
+    public Transform farthest; /*code for bg*/
+    public Transform middle; /*code for bg*/
+    public Transform near; /*code for bg*/
+    public AudioSource jumpSound;
 
     public float horizV;
     private float maxHorizV;
@@ -44,6 +50,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (Input.GetKey(KeyCode.LeftArrow)) {
+            animator.SetInteger("HorizontalSpeed", 2); /*code for animation*/
+            sprite.flipX = true;
             if (horizV > 0){
                 horizA = 0;
                 horizV = 0;
@@ -57,6 +65,8 @@ public class PlayerController : MonoBehaviour
             }
 
         } else if (Input.GetKey(KeyCode.RightArrow)) {
+            animator.SetInteger("HorizontalSpeed", 2); /*code for animation*/
+            sprite.flipX = false;
             if (horizV < 0){
                 horizA = 0;
                 horizV = 0;
@@ -70,6 +80,7 @@ public class PlayerController : MonoBehaviour
             }
 
         } else {
+            animator.SetInteger("HorizontalSpeed", 0); /*code for animation*/
             if(isGrounded){
                 decelMultiplier = 16;
             } else {
@@ -87,11 +98,12 @@ public class PlayerController : MonoBehaviour
         horizV = horizV + horizA * Time.deltaTime;
         x = x + horizV * Time.deltaTime;
 
-
+        animator.SetBool("isGrounded", isGrounded); /*code for animation*/
         if (isGrounded){
             if (Input.GetKeyDown(KeyCode.Space)){
                 // formula from unity documentation
                 vertV += Mathf.Sqrt(jumpHeight * -3 * gravity);
+                jumpSound.Play();
 
                 isGrounded = false;
             }
@@ -106,6 +118,17 @@ public class PlayerController : MonoBehaviour
         objTransform.position = new Vector3(x, y, 0);
 
         displayText.text = score.ToString();
+
+        if (horizV != 0){
+            MakeParallaxEffect(horizV);
+        }
+    }
+
+    /*for bg*/
+    public void MakeParallaxEffect(float x){
+        farthest.position = new Vector3(farthest.position.x,farthest.position.y,farthest.position.z);
+        middle.position = new Vector3(middle.position.x+x*0.0008f,middle.position.y,middle.position.z);
+        near.position = new Vector3(near.position.x+x*0.003f,near.position.y,near.position.z);
     }
 
     public void IsCollidingWithObject(Collidable other, float otherX, float otherY, float otherWidth, float otherHeight)

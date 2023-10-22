@@ -41,6 +41,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 3078657139
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: tile
+    uniqueID: 3957589301
+    locked: 0
+  - name: transition
+    uniqueID: 2418346449
+    locked: 0
+  - name: REAL TRANSITION
+    uniqueID: 359527735
     locked: 0
